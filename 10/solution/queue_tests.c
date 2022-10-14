@@ -1,8 +1,8 @@
+#include "queue_utils.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-#include "queue_utils.h"
 
 void trim(char *str) {
     int l = strlen(str);
@@ -13,7 +13,7 @@ void trim(char *str) {
 
 char *get_string() {
     char buffer[128] = { 0 };
-
+    printf("Enter a string: ");
     fgets(buffer, 128, stdin);
     trim(buffer);
 
@@ -26,40 +26,61 @@ char *get_string() {
 void print_menu() {
     printf("1. Enqueue\n");
     printf("2. Dequeue\n");
-    printf("3. Exit\n");
+    printf("3. Print Queue\n");
+    printf("4. Exit\n");
     printf("> ");
 }
 
-int main() {
+void print_queue(array_s *queue) {
+    for (int i = 0; i < queue->numel; i++) {
+        printf("%d. %s\n", i + 1, (char *)queue->data[i]);
+    }
+}
 
+int main() {
     int selection = 0;
     array_s queue = { 0 };
     char *temp = NULL;
 
-    while (selection != 3) {
-        // Print menu
+    while (selection != 4) {
+        // display the menu
         print_menu();
-        // Get our selection
-        scanf("%d", &selection);
+        // prompt the user to enter a selection
+        int result = scanf("%d", &selection);
         while (getchar() != '\n');
-        switch (selection)
-        {
+        if (result == 0) {
+            selection = -1;
+        }
+        // execute selection
+        switch (selection) {
         case 1:
-            // add string
+            // enqueue
             enqueue(get_string(), &queue);
             break;
         case 2:
-            // remove string
+            // dequeue
             temp = dequeue(&queue);
             if (temp != NULL) {
-                printf("Dequeued \"%s\"\n", temp);
+                printf("Removed \"%s\" from the queue.\n", temp);
+                free(temp);
             } else {
-                printf("Nothing in the queue.\n");
+                printf("There are no items in the queue.\n");
             }
             break;
         case 3:
-            // exit
+            // print
+            print_queue(&queue);
             break;
+        case 4:
+            // exit
+            for (int i = 0; i < queue.numel; i++) {
+                free(queue.data[i]);
+            }
+
+            free(queue.data);
+            break;
+        default:
+            printf("Invalid choice.\n");
         }
     }
 
