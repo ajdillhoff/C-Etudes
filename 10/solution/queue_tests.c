@@ -4,6 +4,12 @@
 #include <string.h>
 #include <stdlib.h>
 
+typedef struct {
+    char *name;
+    int roll;
+    int position;
+} player_s;
+
 void trim(char *str) {
     int l = strlen(str);
     if (str[l-1] == '\n') {
@@ -27,14 +33,27 @@ void print_menu() {
     printf("1. Enqueue\n");
     printf("2. Dequeue\n");
     printf("3. Print Queue\n");
-    printf("4. Exit\n");
+    printf("4. Roll\n");
+    printf("5. Exit\n");
     printf("> ");
+}
+
+int rolld20() {
+    return rand() % 20 + 1;
 }
 
 void print_queue(array_s *queue) {
     for (int i = 0; i < queue->numel; i++) {
-        printf("%d. %s\n", i + 1, (char *)queue->data[i]);
+        player_s *p = queue->data[i];
+        printf("%d. %s\n", p->position, p->name);
     }
+}
+
+int compare(const void *elem1, const void *elem2) {
+    player_s *p1 = *(player_s **)elem1;
+    player_s *p2 = *(player_s **)elem2;
+
+    return p1->roll - p2->roll;
 }
 
 int main() {
@@ -42,7 +61,7 @@ int main() {
     array_s queue = { 0 };
     char *temp = NULL;
 
-    while (selection != 4) {
+    while (selection != 5) {
         // display the menu
         print_menu();
         // prompt the user to enter a selection
@@ -53,10 +72,13 @@ int main() {
         }
         // execute selection
         switch (selection) {
-        case 1:
+        case 1: {
             // enqueue
-            enqueue(get_string(), &queue);
+            player_s *p = calloc(1, sizeof(player_s));
+            p->name = get_string();
+            enqueue(p, &queue);
             break;
+        }
         case 2:
             // dequeue
             temp = dequeue(&queue);
@@ -72,6 +94,22 @@ int main() {
             print_queue(&queue);
             break;
         case 4:
+            // roll initiative
+            for (int i = 0; i < queue.numel; i++) {
+                player_s *p = queue.data[i];
+                p->roll = rolld20();
+            }
+
+            // Call qsort
+            qsort(queue.data, queue.numel, sizeof(player_s *), compare);
+
+            // roll initiative
+            for (int i = 0; i < queue.numel; i++) {
+                player_s *p = queue.data[i];
+                p->position = i + 1;
+            }
+            break;
+        case 5:
             // exit
             for (int i = 0; i < queue.numel; i++) {
                 free(queue.data[i]);
