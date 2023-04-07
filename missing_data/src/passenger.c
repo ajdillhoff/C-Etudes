@@ -50,8 +50,10 @@ void print_passengers(passenger_s **passengers, int num_passengers) {
     }
 }
 
+/*
+ * Parses a line of CSV into a passenger_s struct.
+ */
 passenger_s *parse_passenger_csv(char *csv_line) {
-    // Replace empty strings in csv_line with UNK
     char *token = strsep(&csv_line, "_");
     int num_attr = 0;
 
@@ -63,11 +65,11 @@ passenger_s *parse_passenger_csv(char *csv_line) {
                 // ID
                 p->groupid = atoi(token);
                 token = strsep(&csv_line, ",");
-                // 0064_02,,True,E/3/S,TRAPPIST-1e,33.0,False,0.0,0.0,,0.0,0.0,Colatz Keen,True
                 p->memberid = atoi(token);
                 break;
             case 1:
                 // home planet
+                // Replaces empty strings with "Deep Space"
                 if (strlen(token) == 0) {
                     p->home_planet = strdup("Deep Space");
                 } else {
@@ -125,7 +127,7 @@ passenger_s *parse_passenger_csv(char *csv_line) {
         }
 
         num_attr++;
-        token = strsep(&token, ",");
+        token = strsep(&csv_line, ",");
     }
 
     return p;
