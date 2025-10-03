@@ -22,12 +22,26 @@
  * Returns:
  *      int *address - The address of the element in the given array `arr`.
  */
+int *get_address(int *arr, int len, int val) {
+    for (int i = 0; i < len; i++) {
+        if (*(arr + i) == val) {
+            return arr + i;
+        }
+    }
+
+    return NULL;
+}
 
 int main() {
     int arr[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+    int a;
 
     // TODO: Call your function
+    int *result = get_address(arr, 10, 8);
     // TODO: Print the value you searched for along with its address
+    if (result) {
+        printf("Found %d at address %p\n", *result, result);
+    }
 
     return 0;
 }
