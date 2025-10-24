@@ -45,7 +45,7 @@ int is_balanced(BTNode *node) {
 // Test case 1: Small array with odd number of elements
 void test_small_odd_array() {
     printf("Testing small odd array...\n");
-    int data[] = {3, 7, 4, 1, 5, 2, 9};
+    int data[] = {3, 4, 5, 1, 7, 9, 6};
     int n = 7;
     
     BTNode *root = build_balanced_bst(data, n);
@@ -61,6 +61,9 @@ void test_small_odd_array() {
     assert(search(root, 3) != NULL);
     assert(search(root, 4) != NULL);
     assert(search(root, 5) != NULL);
+    assert(search(root, 6) != NULL);
+    assert(search(root, 7) != NULL);
+    assert(search(root, 9) != NULL);
     
     release_tree(root);
     printf("Small odd array test passed!\n");
