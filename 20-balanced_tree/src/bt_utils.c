@@ -16,7 +16,7 @@ void inorder_dfs(BTNode *root) {
 
     printf("%d\n", root->data);
 
-    dfs(root->right);
+    inorder_dfs(root->right);
 }
 
 void insert(BTNode **root, int val) {
